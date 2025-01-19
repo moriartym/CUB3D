@@ -8,7 +8,15 @@ LIBFT_DIR = libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS_NORMAL = cub3d.c \
+SRCS_NORMAL = get_next_line/get_next_line.c \
+		get_next_line/get_next_line_utils.c \
+		cub3d.c \
+		map_validation/extract_map.c \
+		map_validation/extract_elements.c \
+		map_validation/extract_content.c \
+		map_validation/check_map.c \
+		map_validation/check_map_utils.c \
+		error_handling/handle_error.c \
 
 OBJS = $(SRCS_NORMAL:.c=.o)
 
