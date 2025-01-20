@@ -35,17 +35,17 @@ int	verify_id(t_map *map, char **arr, int line)
 		return (0);
 	else if (ft_arrlen(arr) != 2)
 		return (element_err(line), 1);
-	else if (ft_strcmp(arr[0], "NO") == 0)
+	else if (ft_strcmp(arr[0], "NO") == 0 && !map->north.filename)
 		id = set_id(&map->north, NORTH);
-	else if (ft_strcmp(arr[0], "EA") == 0)
+	else if (ft_strcmp(arr[0], "EA") == 0 && !map->east.filename)
 		id = set_id(&map->east, EAST);
-	else if (ft_strcmp(arr[0], "SO") == 0)
+	else if (ft_strcmp(arr[0], "SO") == 0 && !map->south.filename)
 		id = set_id(&map->south, SOUTH);
-	else if (ft_strcmp(arr[0], "WE") == 0)
+	else if (ft_strcmp(arr[0], "WE") == 0 && !map->west.filename)
 		id = set_id(&map->west, WEST);
-	else if (ft_strcmp(arr[0], "F") == 0 && verify_rgb(arr[1]) == 0)
+	else if (ft_strcmp(arr[0], "F") == 0 && !map->floor.filename && verify_rgb(arr[1]) == 0)
 		id = set_id(&map->floor, FLOOR);
-	else if (ft_strcmp(arr[0], "C") == 0 && verify_rgb(arr[1]) == 0)
+	else if (ft_strcmp(arr[0], "C") == 0 && !map->ceiling.filename && verify_rgb(arr[1]) == 0)
 		id = set_id(&map->ceiling, CEILING);
 	else
 		return (element_err(line), 1);
