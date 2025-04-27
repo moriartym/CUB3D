@@ -4,9 +4,9 @@ void	handle_error(char *err)
 {
 	if (!err)
 		return ;
-	write(2, "Error\n", 6);
-	write(2, err, ft_strlen(err));
-	write(2, "\n", 1);
+	ft_putstr_fd("Error\n", 2);
+	ft_putstr_fd(err, 2);
+	ft_putstr_fd("\n", 2);
 	exit (1);
 }
 

@@ -12,6 +12,10 @@
 #include <math.h>        //gcc your_program.c -lm
 #include <stdio.h>
 
+# include "minilibx-linux/mlx.h"
+# include <X11/keysym.h>
+# include <X11/X.h>
+
 typedef enum	direction
 {
 	NOTHING,
@@ -54,6 +58,22 @@ typedef struct	cub3d
 	t_map	map;
 }				t_cub;
 
+typedef struct s_var {
+    void *mlx;
+    void *win;
+
+    float px, py;
+    float pa;
+    float pdx, pdy;
+
+	int move_w;
+    int move_a;
+    int move_s;
+    int move_d;
+
+	struct timeval last_time;
+} t_var;
+
 // from extract.c
 int		extract_map(t_map *map);
 int		check_map_name(char *file);
@@ -85,5 +105,9 @@ int	check_map(t_map *map);
 // from handle_error.c
 void	handle_error(char *err);
 int		element_err(int line);
+
+int	create_visual(t_cub *cub3);
+int	close_window(t_var *data);
+int	key_hook(int keysym, t_var *data);
 
 #endif

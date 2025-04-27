@@ -1,6 +1,7 @@
 CC = cc
 
-CFLAGS_NORMAL = -Wall -Wextra -Werror
+CFLAGS_NORMAL = 
+#-Wall -Wextra -Werror
 
 NAME = cub3d
 
@@ -17,6 +18,7 @@ SRCS_NORMAL = get_next_line/get_next_line.c \
 		map_validation/check_map.c \
 		map_validation/check_map_utils.c \
 		error_handling/handle_error.c \
+		raycast.c \
 
 OBJS = $(SRCS_NORMAL:.c=.o)
 
@@ -25,10 +27,10 @@ all: $(NAME)
 bonus: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
+	$(CC) $(OBJS) -Lminilibx-linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -L$(LIBFT_DIR) -lft -o $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS_NORMAL) -c $< -o $@
+	$(CC) $(CFLAGS_NORMAL) -I/usr/include -Imlx_linux -O3 -c $< -o $@
 
 $(LIBFT):
 	$(MAKE) bonus -C $(LIBFT_DIR)
