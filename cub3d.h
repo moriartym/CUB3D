@@ -13,8 +13,14 @@
 #include <stdio.h>
 
 # include "minilibx-linux/mlx.h"
-# include <X11/keysym.h>
-# include <X11/X.h>
+
+/* DELETE BEFORE SUBMISSION */
+# ifdef __linux__
+    # include <X11/keysym.h>
+    # include <X11/X.h>
+# elif __APPLE__
+    # include "mac.h"
+# endif
 
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 512
@@ -37,7 +43,7 @@
 #define P3  (3 * P2)
 
 #define PLAYER_SIZE  10
-#define NUM_RAYS (WINDOW_WIDTH - MAP_WIDTH * TILE_SIZE) / STRIP_WIDTH
+#define NUM_RAYS ((WINDOW_WIDTH - MAP_WIDTH * TILE_SIZE) / STRIP_WIDTH)
 #define NUM_RAY 64
 #define FOV (PI / 3)
 #define MOVEMENT_SPEED 100

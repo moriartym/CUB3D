@@ -23,7 +23,8 @@ int close_window(t_var *data)
         mlx_destroy_window(data->mlx, data->win);
     if (data->mlx)
     {
-        mlx_destroy_display(data->mlx);
+        /* UNCOMMENT BEFORE SUBMISSION */
+        // mlx_destroy_display(data->mlx);
         free(data->mlx);
     }
     exit(0);
