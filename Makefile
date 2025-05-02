@@ -18,6 +18,11 @@ SRCS_NORMAL = get_next_line/get_next_line.c \
 		map_validation/check_map.c \
 		map_validation/check_map_utils.c \
 		error_handling/handle_error.c \
+		window.c \
+		minimap.c \
+		player.c \
+		movement.c \
+		init_struct.c \
 		raycast.c \
 
 OBJS = $(SRCS_NORMAL:.c=.o)

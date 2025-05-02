@@ -1,0 +1,21 @@
+🗺️ Minimap – Know where you at
+
+🎮 WASD move – Strafe in style
+
+🔁 Right/Left arrow rotation – Smooth turns
+
+🖱️ Mouse rotation – Look around like a pro
+
+🚪 Open and close doors – Interactive world
+
+🧱 Wall collision (special key) – No clip? No thanks!
+
+🧱🧱🧱🧱 4 wall textures – Visual variety
+
+🧱🟫 Ceiling and floor texture – Full immersion
+
+👾 Enemy animated sprites – Bring the heat
+
+🗝️ Key animated sprites – Find it, grab it
+
+💡 Lamp animated sprites – Light it up

@@ -13,13 +13,13 @@ int	extract_map(t_map *map)
 		return (1);
 	if (extract_content(map, fd) == 1)
 		return (1);
-	printf("map height: %d\n", map->height);
-	int i = 0;
-	while (map->arr[i])
-	{
-		printf("height %d: %s\n", i, map->arr[i]);
-		i++;
-	}
+	// printf("map height: %d\n", map->height);
+	// int i = 0;
+	// while (map->arr[i])
+	// {
+	// 	printf("height %d: %s\n", i, map->arr[i]);
+	// 	i++;
+	// }
 	if (check_map(map) == 1)
 		return (1);
 	return (0);

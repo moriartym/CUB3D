@@ -3,3 +3,5 @@ ERROR MSG
 - There is mutiple player's start position ✅
 - The map must be surrounded by walls
 - 
+
+SPACE ISSUE ON MAP

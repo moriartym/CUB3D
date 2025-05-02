@@ -17,7 +17,11 @@ void	validate_map_char(t_map *map)
 				handle_error("The map must be composed \
 					of only 0, 1, N, S, E, W");
 			if (ft_strchr("NSEW", map->arr[i][j]))
+			{
+				map->xpos = j;
+				map->ypos = i;
 				player++;
+			}
 			j++;
 		}
 		i++;

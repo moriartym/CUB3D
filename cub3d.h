@@ -16,6 +16,29 @@
 # include <X11/keysym.h>
 # include <X11/X.h>
 
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 512
+#define PLAYER_COLOR 0x00FF0000
+#define RAYCAST_COLOR 0x0000FF00
+#define WALL_COLOR 0x00AAAAAA
+#define EMPTY_COLOR 0x404040
+
+#define MAP_WIDTH  8
+#define MAP_HEIGHT 8
+#define TILE_SIZE  64
+#define TILE_SIZE_TEXTURE  32
+
+#define PI  3.14159265359
+#define P2  (PI / 2)
+#define P3  (3 * P2)
+
+#define PLAYER_SIZE  10
+#define NUM_RAYS 60
+#define FOV (PI / 3)
+#define MOVEMENT_SPEED 100
+#define ROTATION_SPEED 2
+#define MAX_DELTA_TIME 0.1 
+
 typedef enum	direction
 {
 	NOTHING,
@@ -50,7 +73,8 @@ typedef struct  s_map
     int		max_length;
     char	**arr;
 
-    int		num_player;
+	int xpos;
+	int ypos;
 }				t_map;
 
 typedef struct	cub3d
@@ -58,21 +82,57 @@ typedef struct	cub3d
 	t_map	map;
 }				t_cub;
 
+typedef struct s_img {
+    void    *img;
+    char    *addr;
+    int     bits_per_pixel;
+    int     line_length;
+    int     endian;
+}   t_img;
+
+typedef struct s_play {
+	float px;
+	float py;
+	float pa;
+	float pdx;
+	float pdy;
+}   t_play;
+
+typedef struct s_move {
+	int move_w;
+	int move_a;
+	int move_s;
+	int move_d;
+}   t_move;
+
 typedef struct s_var {
     void *mlx;
     void *win;
-
-    float px, py;
-    float pa;
-    float pdx, pdy;
-
-	int move_w;
-    int move_a;
-    int move_s;
-    int move_d;
-
+	t_map	map;
+	t_img   image;
+	t_play   player;
+	t_move move;
 	struct timeval last_time;
 } t_var;
+
+typedef struct s_ray {
+	int r;
+	int mx;
+	int my;
+	int mp;
+	int dof;
+	int side; 
+	float vx;
+	float vy;
+	float rx;
+	float ry;
+	float ra;
+	float xo;
+	float yo;
+	float disV;
+	float disH;
+	float tan;
+} t_ray;
 
 // from extract.c
 int		extract_map(t_map *map);
@@ -106,8 +166,36 @@ int	check_map(t_map *map);
 void	handle_error(char *err);
 int		element_err(int line);
 
-int	create_visual(t_cub *cub3);
+// from window.c
+
+int	create_visual(t_cub *cube);
 int	close_window(t_var *data);
 int	key_hook(int keysym, t_var *data);
+void my_mlx_pixel_put(t_img *img, int x, int y, int color);
+void create_image_buffer(t_var *data);
+
+// from minimap.c
+void    create_minimap(t_var *data);
+void draw_tile(t_img *img, int x, int y, int color);
+void draw_map(t_var *data, int x, int y);
+void player_start(t_var *data, int y, int x);
+
+// from player.c
+void draw_player(t_var *data);
+
+//from movement.c
+
+int handle_keypress(int keysym, t_var *data);
+int handle_keyrelease(int keysym, t_var *data);
+void update_movement(t_var *data);
+float normalize_radians(float angle);
+double get_delta_time(t_var *data);
+
+// from init_struct.c
+void init_move(t_var *data);
+void init_player(t_var *data);
+void init_all(t_var *data, t_cub *cube);
+
+void draw_rays(t_var *data);
 
 #endif
