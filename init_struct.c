@@ -6,6 +6,8 @@ void init_move(t_var *data)
     data->move.move_a = 0;
     data->move.move_s = 0;
     data->move.move_d = 0;
+    data->move.move_al = 0;
+    data->move.move_ar = 0;
 }
 
 void init_player(t_var *data)

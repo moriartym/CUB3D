@@ -1,3 +1,7 @@
+slider on the wall
+mouse
+door
+
 🗺️ Minimap – Know where you at
 
 🎮 WASD move – Strafe in style

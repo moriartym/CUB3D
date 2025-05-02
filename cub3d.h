@@ -108,6 +108,8 @@ typedef struct s_move {
 	int move_a;
 	int move_s;
 	int move_d;
+	int move_al;
+	int move_ar;
 }   t_move;
 
 typedef struct s_var {
@@ -118,6 +120,7 @@ typedef struct s_var {
 	t_play   player;
 	t_move move;
 	struct timeval last_time;
+
 } t_var;
 
 typedef struct s_line {
@@ -201,7 +204,7 @@ void player_start(t_var *data, int y, int x);
 void draw_player(t_var *data);
 
 //from movement.c
-
+int handle_mouse_move(int x, int y, t_var *data);
 int handle_keypress(int keysym, t_var *data);
 int handle_keyrelease(int keysym, t_var *data);
 void update_movement(t_var *data);
