@@ -1,57 +1,44 @@
-#include "mlx.h"
+ray.dof = 0;
+ray.disH = 100000;
+ray.tan =  1 / ray.tan;
 
-#define WIDTH 800
-#define HEIGHT 600
-
-typedef struct s_img {
-    void    *img;
-    char    *addr;
-    int     bits_per_pixel;
-    int     line_length;
-    int     endian;
-}   t_img;
-
-typedef struct s_vars {
-    void    *mlx;
-    void    *win;
-    t_img   img;
-}   t_vars;
-
-void my_mlx_pixel_put(t_img *img, int x, int y, int color)
+if (sin(ray.ra) < -0.001)
 {
-    char *dst;
-
-    dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-    *(unsigned int *)dst = color;
+    
+    ray.ry = (((int)data->player.py >> 6) << 6) - 0.0001;
+    ray.rx = (data->player.py - ray.ry) * ray.tan + data->player.px;
+    ray.yo = -64;
+    ray.xo = -ray.yo * ray.tan;
 }
-
-int main(void)
+else if (sin(ray.ra) > 0.001)
 {
-    t_vars vars;
-
-    // Init MLX
-    vars.mlx = mlx_init();
-    vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "Image Draw");
-
-    // Create image
-    vars.img.img = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
-    vars.img.addr = mlx_get_data_addr(vars.img.img,
-            &vars.img.bits_per_pixel,
-            &vars.img.line_length,
-            &vars.img.endian);
-
-    // Draw something in the image buffer
-    for (int y = 100; y < 200; y++)
+    ray.ry = (((int)data->player.py >> 6) << 6) + 64;
+    ray.rx = (data->player.py - ray.ry) * ray.tan + data->player.px;
+    ray.yo = 64;
+    ray.xo = -ray.yo * ray.tan;
+}
+else
+{
+    ray.rx = data->player.px;
+    ray.ry = data->player.py;
+    ray.dof = 8;
+}
+while (ray.dof < 8)
+{
+    ray.mx=(int)(ray.rx)>>6;
+    ray.my=(int)(ray.ry)>>6;
+    ray.mp=ray.my*MAP_HEIGHT+ray.mx;
+    if (ray.mx >= 0 && ray.my >= 0 && ray.mx < MAP_WIDTH && ray.my < MAP_HEIGHT && data->map.arr[ray.my ][ray.mx] == '1')
     {
-        for (int x = 100; x < 300; x++)
-        {
-            my_mlx_pixel_put(&vars.img, x, y, 0x00FF00); // Green rectangle
-        }
+        ray.dof = 8;
+        ray.disH = sqrt(pow(ray.rx - data->player.px, 2) + pow(ray.ry - data->player.py, 2));
+
+    }
+    else
+    {
+            ray.rx += ray.xo;
+            ray.ry += ray.yo;
+            ray.dof += 1;
     }
 
-    // Show image in window
-    mlx_put_image_to_window(vars.mlx, vars.win, vars.img.img, 0, 0);
-
-    mlx_loop(vars.mlx);
-    return (0);
 }

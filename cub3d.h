@@ -23,6 +23,10 @@
 #define WALL_COLOR 0x00AAAAAA
 #define EMPTY_COLOR 0x404040
 
+#define STRIP_WIDTH 2
+#define CEILING_COLOR 0x444444
+#define FLOOR_COLOR 0x222222
+
 #define MAP_WIDTH  8
 #define MAP_HEIGHT 8
 #define TILE_SIZE  64
@@ -33,7 +37,8 @@
 #define P3  (3 * P2)
 
 #define PLAYER_SIZE  10
-#define NUM_RAYS 60
+#define NUM_RAYS (WINDOW_WIDTH - MAP_WIDTH * TILE_SIZE) / STRIP_WIDTH
+#define NUM_RAY 64
 #define FOV (PI / 3)
 #define MOVEMENT_SPEED 100
 #define ROTATION_SPEED 2
@@ -114,6 +119,18 @@ typedef struct s_var {
 	t_move move;
 	struct timeval last_time;
 } t_var;
+
+typedef struct s_line {
+	float px;
+	float py;
+	float rx;
+	float ry;
+	float dx;
+	float dy;
+	int steps;
+	float x_inc;
+	float y_inc;
+} t_line;
 
 typedef struct s_ray {
 	int r;
@@ -196,6 +213,16 @@ void init_move(t_var *data);
 void init_player(t_var *data);
 void init_all(t_var *data, t_cub *cube);
 
+// from raycast.c
+void draw_line(t_var *data, t_line line, int color);
+void cast_rays(t_var *data, t_ray *ray);
 void draw_rays(t_var *data);
+
+// from raycast_helper.c
+void cast_vertical (t_var* data, t_ray* ray);
+void vertical_dof(t_var* data, t_ray* ray);
+void cast_horizontal (t_var *data, t_ray * ray);
+void horizontal_dof(t_var* data, t_ray* ray);
+
 
 #endif

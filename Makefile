@@ -24,6 +24,7 @@ SRCS_NORMAL = get_next_line/get_next_line.c \
 		movement.c \
 		init_struct.c \
 		raycast.c \
+		raycast_helper.c \
 
 OBJS = $(SRCS_NORMAL:.c=.o)
 

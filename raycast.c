@@ -1,27 +1,91 @@
 #include "cub3d.h"
 
-
-void draw_line(t_var *data, int x0, int y0, int x1, int y1, int color)
+void draw_line(t_var *data, t_line line, int color)
 {
-    float dx = x1 - x0;
-    float dy = y1 - y0;
+    int i;
 
-    int steps = fabs(dx) > fabs(dy) ? fabs(dx) : fabs(dy);
-
-    float x_inc = dx / steps;
-    float y_inc = dy / steps;
-
-    float x = x0;
-    float y = y0; 
-
-    for (int i = 0; i <= steps; i++)
+    i = 0;
+    line.dx = line.rx - data->player.px;
+    line.dy = line.ry - data->player.py;
+    if (fabs(line.dx) > fabs(line.dy))
+        line.steps =  fabs(line.dx);
+    else
+        line.steps =  fabs(line.dy);
+    line.x_inc = line.dx / line.steps;
+    line.y_inc = line.dy / line.steps;
+    while (i <= line.steps)
     {
-        my_mlx_pixel_put(&data->image, (int)x, (int) y, color);
-        x += x_inc;
-        y += y_inc;
+        my_mlx_pixel_put(&data->image, (int)line.px, (int) line.py, color);
+        line.px += line.x_inc;
+        line.py += line.y_inc;
+        i++;
     }
 }
 
+void cast_rays(t_var *data, t_ray *ray)
+{
+    t_line line;
+
+    if (ray->disH < ray->disV)
+        ray->side = 1; 
+    else
+    {
+        ray->disH = ray->disV;
+        ray->rx = ray->vx;
+        ray->ry = ray->vy;
+    }
+    line = (t_line){0};
+    line.px = (int)data->player.px;
+    line.py = (int)data->player.py;
+    line.rx = (int)ray->rx;
+    line.ry = (int)ray->ry;
+    draw_line(data, line, RAYCAST_COLOR);
+}
+
+void draw_3d_helper(t_var *data, t_ray *ray, int lineOff, int lineH)
+{
+    int color = ray->side == 1 ? 0xCCCCCC : 0xAAAAAA;
+    int x, y, w;
+
+    w = 0;
+    while (w < STRIP_WIDTH)
+    {
+        x = ray->r * STRIP_WIDTH + (MAP_WIDTH * TILE_SIZE) + w;
+
+        if (x < WINDOW_WIDTH)
+        {
+            y = 0;
+            while (y < WINDOW_HEIGHT)
+            {
+                if (y < lineOff)
+                    my_mlx_pixel_put(&data->image, x, y, CEILING_COLOR);
+                else if (y >= lineOff && y < lineOff + lineH)
+                    my_mlx_pixel_put(&data->image, x, y, color);
+                else
+                    my_mlx_pixel_put(&data->image, x, y, FLOOR_COLOR);
+                y++;
+            }
+        }
+        w++;
+    }
+}
+
+
+void draw_3d(t_var *data, t_ray *ray)
+{
+    double corrected_dist;
+    int lineH;
+    int lineOff;
+    int color;
+    int x, y, w;
+
+    corrected_dist = ray->disH * cos(normalize_radians(data->player.pa - ray->ra));
+    lineH = (TILE_SIZE * WINDOW_HEIGHT)/(corrected_dist);
+    if (lineH > WINDOW_HEIGHT)
+        lineH= WINDOW_HEIGHT;
+    lineOff = (WINDOW_HEIGHT / 2) - (lineH >> 1);
+    draw_3d_helper(data, ray, lineOff, lineH);
+}
 
 void draw_rays(t_var *data)
 {
@@ -32,118 +96,19 @@ void draw_rays(t_var *data)
     ray.r = 0;
     while (ray.r < NUM_RAYS)
     {
-        
-        // vertical
-        ray.dof = 0;
-        ray.side = 0;
         ray.disV = 100000;
-        ray.tan = - tan(ray.ra);
-        if (cos(ray.ra) > 0.001)
-        {
-            ray.rx = (((int)data->player.px >> 6) << 6) + 64;
-            ray.ry= (data->player.px - ray.rx) * ray.tan + data->player.py;
-            ray.xo= 64;
-            ray.yo= - ray.xo * ray.tan;
-        }
-        else if (cos(ray.ra) < -0.001)
-        {
-            ray.rx = (((int)data->player.px >> 6) << 6) - 0.0001;
-            ray.ry= (data->player.px - ray.rx) * ray.tan + data->player.py;
-            ray.xo= - 64;
-            ray.yo= - ray.xo * ray.tan;
-        }
-        else
-        {
-            ray.rx = data->player.px;
-            ray.ry = data->player.py;
-            ray.dof = 8;
-        }
-        while (ray.dof < 8)
-        {
-            ray.mx = (int) (ray.rx) >> 6;
-            ray.my = (int) (ray.ry) >> 6;
-            ray.mp = ray.my * MAP_WIDTH + ray.mx;
-            if (ray.mx >= 0 && ray.my >= 0 && ray.mx < MAP_WIDTH && ray.my < MAP_HEIGHT && data->map.arr[ray.my][ray.mx] == '1')
-            {
-                ray.dof = 8;
-                ray.vx = ray.rx;
-                ray.vy = ray.ry;
-                ray.disV = sqrt(pow(ray.rx - data->player.px, 2) + pow(ray.ry - data->player.py, 2));
-                }
-            else
-            {
-                ray.rx += ray.xo;
-                ray.ry += ray.yo;
-                ray.dof += 1;
-            }
-        }
-    //    Horizontal
-        ray.dof = 0;
         ray.disH = 100000;
+        ray.side = 0;
+        ray.dof = 0;
+        ray.tan = - tan(ray.ra);
+        cast_vertical(data, &ray);
+        ray.dof = 0;
         ray.tan =  1 / ray.tan;
-
-        if (sin(ray.ra) < -0.001)
-        {
-            
-            ray.ry = (((int)data->player.py >> 6) << 6) - 0.0001;
-            ray.rx = (data->player.py - ray.ry) * ray.tan + data->player.px;
-            ray.yo = -64;
-            ray.xo = -ray.yo * ray.tan;
-        }
-        else if (sin(ray.ra) > 0.001)
-        {
-            ray.ry = (((int)data->player.py >> 6) << 6) + 64;
-            ray.rx = (data->player.py - ray.ry) * ray.tan + data->player.px;
-            ray.yo = 64;
-            ray.xo = -ray.yo * ray.tan;
-        }
-        else
-        {
-            ray.rx = data->player.px;
-            ray.ry = data->player.py;
-            ray.dof = 8;
-        }
-        while (ray.dof < 8)
-        {
-            ray.mx=(int)(ray.rx)>>6;
-            ray.my=(int)(ray.ry)>>6;
-            ray.mp=ray.my*MAP_HEIGHT+ray.mx;
-            if (ray.mx >= 0 && ray.my >= 0 && ray.mx < MAP_WIDTH && ray.my < MAP_HEIGHT && data->map.arr[ray.my ][ray.mx] == '1')
-            {
-                ray.dof = 8;
-                ray.disH = sqrt(pow(ray.rx - data->player.px, 2) + pow(ray.ry - data->player.py, 2));
-    
-            }
-            else
-            {
-                    ray.rx += ray.xo;
-                    ray.ry += ray.yo;
-                    ray.dof += 1;
-            }
-
-        }
-        if (ray.disH < ray.disV)
-        {
-            ray.side = 1; 
-        }
-        else
-        {
-            ray.rx = ray.vx;
-            ray.ry = ray.vy;
-            ray.side = 0;
-        }
-
-        int x1 = (int)data->player.px;
-        int y1 = (int)data->player.py;
-        int x2 = (int)ray.rx;
-        int y2 = (int)ray.ry;
-
-        draw_line(data, x1, y1, x2, y2, RAYCAST_COLOR);
-
-
+        cast_horizontal(data, &ray);
+        cast_rays(data, &ray);
+        draw_3d(data, &ray);
         ray.ra += (PI / 3) / NUM_RAYS;
         ray.ra = normalize_radians(ray.ra);
         ray.r++;
-
     }
 }
