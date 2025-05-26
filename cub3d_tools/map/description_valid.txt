@@ -1,0 +1,15 @@
+valid0.cub  : Subject Map              - Map exactly as provided in the subject PDF.
+valid1.cub  : Minimal Valid File       - Smallest valid config and map.
+valid2.cub  : Out-of-Order Elements    - Config elements appear in non-standard order.
+valid3.cub  : Extra Spaces in Config   - Extra spaces between identifiers and their values.
+valid4.cub  : Empty Lines in Config    - Contains empty lines between config entries.
+valid5.cub  : Space Around Map         - Empty lines before and after the map block.
+valid6.cub  : Map With Spaces          - Map includes space characters, fully enclosed.
+valid7.cub  : Player Facing North      - Player 'N' placed in the map.
+valid8.cub  : Player Facing East       - Player 'E' placed in the map.
+valid9.cub  : Player Facing South      - Player 'S' placed in the map.
+valid10.cub : Player Facing West       - Player 'W' placed in the map.
+valid11.cub : Diamond-Shaped Map       - Centered diamond shape using 1s and 0s.
+valid12.cub : Large 150x150 Map        - Fully enclosed 150×150 map with a centered player.
+valid13.cub : Mixed Format Stress Test - Diamond map + out-of-order + extra space/lines.
+valid14.cub : Mix Tab and Spaces

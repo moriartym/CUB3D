@@ -1,0 +1,18 @@
+invalid0.cub  : Map Not Closed             - Map has an open edge or leak; it's not fully enclosed by walls.
+invalid1.cub  : Multiple Player Starts     - Contains more than one player start position (e.g., 'N' and 'S').
+invalid2.cub  : Invalid Map Characters     - Map includes illegal characters (e.g., 'A', '*', or digits > 1).
+invalid3.cub  : Missing Config Element     - One or more required config lines (e.g., NO, F, or C) are missing.
+invalid4.cub  : Invalid Color Format       - Floor or ceiling color is incorrectly formatted or contains out-of-range values (e.g., > INT_MAX or letters).
+invalid5.cub  : Invalid Texture Path       - Texture path is missing or improperly formatted.
+invalid6.cub  : Letters in RGB Values      - RGB color value includes a letter instead of a number.
+invalid7.cub  : Map Not at End             - Map is not placed at the end of the file, violating the required format.
+invalid8.cub  : Empty Map Block            - The map section is missing or contains only spaces.
+invalid9.cub  : Large Map Not Closed       - A large map where at least one wall is not properly closed.
+invalid10.cub : Space Not Enclosed         - Map contains space characters that are not fully enclosed by walls.
+invalid11.cub : Line Break Inside Map      - Map values are interrupted by unintended line breaks.
+invalid12.cub : Typo in Config Identifier  - A config identifier is misspelled (e.g., 'NA' instead of 'NO').
+invalid13.cub : Duplicate Config Entries   - A config type is declared more than once (e.g., two 'NO' lines).
+invalid14.cub : Map Only Contains Spaces   - The map consists entirely of space characters; player surroundings are not valid.
+invalid15.cub : '+' in RGB
+invalid16.cub : Incorrect Texture Description
+invalid17.cub : Player Not Surrounded By Wall

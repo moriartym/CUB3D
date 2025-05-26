@@ -1,0 +1,12 @@
+NO ../textures/tiles/brick.xpm
+SO ../textures/tiles/pink_plank.xpm
+WE ../textures/tiles/sand.xpm
+EA ../textures/tiles/white_plank.xpm
+F 61,65,75
+C 122,133,143
+
+ 111111
+ 100101
+ 101001
+ 1100N1
+ 111111
